@@ -4,6 +4,7 @@ import it.riccardo.app.webapprest.model.Utenti;
 import it.riccardo.app.webapprest.service.UtentiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,8 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class WebAppRestController {
-
-
 
     @Autowired
     private UtentiService utentiService;
@@ -24,9 +23,14 @@ public class WebAppRestController {
         return "daje";
     }
 
-    @GetMapping("/users")
+    @GetMapping(value = "/users",produces = "application/json")
     public List<Utenti> getAllUsers(){
         return utentiService.getAllUsers();
+    }
+
+    @GetMapping(value = "/users/{id}",produces = "application/json")
+    public Utenti getUserById( @PathVariable Integer id){
+        return utentiService.getUserById(id);
     }
 
 }

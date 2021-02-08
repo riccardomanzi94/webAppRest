@@ -15,7 +15,7 @@ public class UtentiServiceImpl implements UtentiService{
     private UtentiRepository utentiRepository;
 
 
-    @PostConstruct
+    /*@PostConstruct
     public void setup(){
 
         Utenti u1 = new Utenti();
@@ -29,11 +29,16 @@ public class UtentiServiceImpl implements UtentiService{
         u2.setCognome("Campoli");
         u2.setEmail("giorgiacampoli1@gmail.com");
         utentiRepository.save(u2);
-    }
+    }*/
 
     @Override
     public List<Utenti> getAllUsers() {
 
         return utentiRepository.findAll();
+    }
+
+    @Override
+    public Utenti getUserById(Integer id) {
+        return utentiRepository.findById(id).get();
     }
 }
