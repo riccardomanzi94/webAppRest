@@ -5,8 +5,8 @@ import it.riccardo.app.webapprest.repository.UtentiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UtentiServiceImpl implements UtentiService{
@@ -38,7 +38,7 @@ public class UtentiServiceImpl implements UtentiService{
     }
 
     @Override
-    public Utenti getUserById(Integer id) {
-        return utentiRepository.findById(id).get();
+    public Optional<Utenti> getUserById(Integer id) {
+        return utentiRepository.findById(id);
     }
 }
