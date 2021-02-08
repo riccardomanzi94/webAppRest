@@ -1,16 +1,19 @@
 package it.riccardo.app.webapprest.web.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import it.riccardo.app.webapprest.model.Articoli;
 import it.riccardo.app.webapprest.model.Utenti;
+import it.riccardo.app.webapprest.service.ArticoliService;
 import it.riccardo.app.webapprest.service.UtentiService;
 import it.riccardo.app.webapprest.web.exception.NotFoundException;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +25,15 @@ public class WebAppRestController {
     @Autowired
     private UtentiService utentiService;
 
+    @Autowired
+    private ArticoliService articoliService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @GetMapping("/status")
     public String getStatus(){
-
-        return "daje";
+        return "service UP :-)";
     }
 
     @SneakyThrows
@@ -45,6 +53,23 @@ public class WebAppRestController {
         }
 
         return new ResponseEntity<>(u, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/aggiungi/articolo")
+    public ResponseEntity<?> insArticolo(@RequestBody Articoli articolo){
+
+        articoliService.InsArticolo(articolo);
+
+        HttpHeaders headers = new HttpHeaders();
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode responseNode = mapper.createObjectNode();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        responseNode.put("code",HttpStatus.OK.toString());
+        responseNode.put("message","Inserimento articolo : " + articolo.getCodArt() + " avvenuta con successo !!! ");
+
+        return new ResponseEntity<>(responseNode,headers,HttpStatus.CREATED);
+
     }
 
 }
