@@ -8,6 +8,7 @@ import it.riccardo.app.webapprest.service.ArticoliService;
 import it.riccardo.app.webapprest.service.UtentiService;
 import it.riccardo.app.webapprest.web.exception.NotFoundException;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,9 +16,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.security.auth.login.AccountNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class WebAppRestController {
@@ -44,15 +47,16 @@ public class WebAppRestController {
 
     @SneakyThrows
     @GetMapping(value = "/user/{id}",produces = "application/json")
-    public ResponseEntity<Optional<Utenti>> getUserById(@PathVariable Integer id){
+    public ResponseEntity<?> getUserById(@PathVariable Integer id){
 
         final Optional<Utenti> u =  utentiService.getUserById(id);
         if(!u.isPresent()){
-            //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            throw new NotFoundException("Utente non presente nel DB");
+            final NotFoundException ex = new NotFoundException();
+            return new ResponseEntity<>(ex.getMessaggio(),HttpStatus.NOT_FOUND);
         }
+        log.debug("Utente {} trovato",u.get().getId());
 
-        return new ResponseEntity<>(u, HttpStatus.OK);
+        return new ResponseEntity<>(u.get(),HttpStatus.OK);
     }
 
     @PostMapping(value = "/aggiungi/articolo")
@@ -61,8 +65,7 @@ public class WebAppRestController {
         articoliService.InsArticolo(articolo);
 
         HttpHeaders headers = new HttpHeaders();
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode responseNode = mapper.createObjectNode();
+        ObjectNode responseNode = objectMapper.createObjectNode();
 
         headers.setContentType(MediaType.APPLICATION_JSON);
         responseNode.put("code",HttpStatus.OK.toString());
