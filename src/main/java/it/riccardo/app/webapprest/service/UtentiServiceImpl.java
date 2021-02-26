@@ -1,6 +1,6 @@
 package it.riccardo.app.webapprest.service;
 
-import it.riccardo.app.webapprest.model.Utenti;
+import it.riccardo.app.webapprest.model.entities.Utenti;
 import it.riccardo.app.webapprest.repository.UtentiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,5 +40,10 @@ public class UtentiServiceImpl implements UtentiService{
     @Override
     public Optional<Utenti> getUserById(Integer id) {
         return utentiRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Utenti> getUserByUsername(String username) {
+        return utentiRepository.findByUsername(username);
     }
 }

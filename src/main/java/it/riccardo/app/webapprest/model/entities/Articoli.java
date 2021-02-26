@@ -1,4 +1,4 @@
-package it.riccardo.app.webapprest.model;
+package it.riccardo.app.webapprest.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;

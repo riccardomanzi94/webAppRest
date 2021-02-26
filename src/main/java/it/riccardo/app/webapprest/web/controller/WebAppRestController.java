@@ -2,8 +2,11 @@ package it.riccardo.app.webapprest.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import it.riccardo.app.webapprest.model.Articoli;
-import it.riccardo.app.webapprest.model.Utenti;
+import it.riccardo.app.webapprest.config.security.JwtProvider;
+import it.riccardo.app.webapprest.model.dto.LoginInputDto;
+import it.riccardo.app.webapprest.model.dto.LoginOutputDto;
+import it.riccardo.app.webapprest.model.entities.Articoli;
+import it.riccardo.app.webapprest.model.entities.Utenti;
 import it.riccardo.app.webapprest.service.ArticoliService;
 import it.riccardo.app.webapprest.service.UtentiService;
 import it.riccardo.app.webapprest.web.exception.NotFoundException;
@@ -16,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.security.auth.login.AccountNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,9 +36,27 @@ public class WebAppRestController {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private JwtProvider jwtProvider;
+
+
     @GetMapping("/status")
     public String getStatus(){
         return "service UP :-)";
+    }
+
+    @PostMapping(value = "/login")
+    public ResponseEntity<?> authenticate(@RequestBody LoginInputDto body){
+
+        final Optional<Utenti> user = utentiService.getUserByUsername(body.getUsername());
+        if(!user.isPresent()){
+            return new ResponseEntity<>("Utente non presente",HttpStatus.NOT_FOUND);
+        }
+
+        String jwt = jwtProvider.createJwt();
+        LoginOutputDto dto = new LoginOutputDto();
+        dto.setToken(jwt);
+        return ResponseEntity.ok(dto);
     }
 
     @SneakyThrows
@@ -59,7 +79,7 @@ public class WebAppRestController {
         return new ResponseEntity<>(u.get(),HttpStatus.OK);
     }
 
-    @PostMapping(value = "/aggiungi/articolo")
+    @PostMapping(value = "/articolo/aggiungi")
     public ResponseEntity<?> insArticolo(@RequestBody Articoli articolo){
 
         articoliService.InsArticolo(articolo);

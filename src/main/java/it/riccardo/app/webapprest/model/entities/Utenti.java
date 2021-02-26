@@ -1,9 +1,9 @@
-package it.riccardo.app.webapprest.model;
+package it.riccardo.app.webapprest.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -31,6 +31,13 @@ public class Utenti implements Serializable {
 
     @Column(name = "email")
     private String email;
+
+    @Column(name = "username")
+    private String username;
+
+    @ToString.Exclude
+    @Column(name = "password")
+    private String password;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,mappedBy = "user")
     @JsonManagedReference

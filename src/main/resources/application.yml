@@ -13,3 +13,8 @@ spring:
     generate-ddl : true
     hibernate:
       ddl-auto : none
+
+security:
+  secret: chiavesupersegretissima
+  prefix: 'Bearer '
+  param: Authorization
