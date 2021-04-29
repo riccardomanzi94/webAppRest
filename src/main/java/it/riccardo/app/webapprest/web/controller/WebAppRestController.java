@@ -3,6 +3,7 @@ package it.riccardo.app.webapprest.web.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import it.riccardo.app.webapprest.config.security.JwtProvider;
+import it.riccardo.app.webapprest.model.dto.ErrorOutput;
 import it.riccardo.app.webapprest.model.dto.LoginInputDto;
 import it.riccardo.app.webapprest.model.dto.LoginOutputDto;
 import it.riccardo.app.webapprest.model.entities.Articoli;
@@ -39,19 +40,27 @@ public class WebAppRestController {
     @Autowired
     private JwtProvider jwtProvider;
 
-
     @GetMapping("/status")
+    @ResponseBody
     public String getStatus(){
-        return "service UP :-)";
+        final String serviceUp = "Service UP";
+        return  serviceUp;
     }
+
 
     @PostMapping(value = "/login")
     public ResponseEntity<?> authenticate(@RequestBody LoginInputDto body){
 
         final Optional<Utenti> user = utentiService.getUserByUsername(body.getUsername());
         if(!user.isPresent()){
-            return new ResponseEntity<>("Utente non presente",HttpStatus.NOT_FOUND);
+            final ErrorOutput ex = new ErrorOutput();
+            ex.setCode("401");
+            ex.setMessage("Utente non presente");
+            return new ResponseEntity<>(ex,HttpStatus.UNAUTHORIZED);
         }
+
+        user.get().setPassword(body.getPassword());
+        utentiService.salvaUtente(user.get());
 
         String jwt = jwtProvider.createJwt();
         LoginOutputDto dto = new LoginOutputDto();
@@ -92,7 +101,53 @@ public class WebAppRestController {
         responseNode.put("message","Inserimento articolo : " + articolo.getCodArt() + " avvenuta con successo !!! ");
 
         return new ResponseEntity<>(responseNode,headers,HttpStatus.CREATED);
-
     }
+
+    @PostMapping(value = "utente/aggiungi")
+    public ResponseEntity<?> aggiungiUser(@RequestBody Utenti user){
+        Optional<Utenti> userDB = utentiService.getUserByUsername(user.getUsername());
+        ErrorOutput out = new ErrorOutput();
+        if(userDB.isPresent()){
+            out.setCode("403");
+            out.setMessage("Utente già presente sul DB !!!");
+            return new ResponseEntity<>(out,HttpStatus.FORBIDDEN);
+        }
+        utentiService.salvaUtente(user);
+        out.setCode("200");
+        out.setMessage("Utente inserito nel DB !!!");
+        return new ResponseEntity<>(out,HttpStatus.CREATED);
+    }
+
+    @PutMapping(value = "utente/aggiorna")
+    public ResponseEntity<?> aggiornaUtente(@RequestBody Utenti user,@RequestParam(value = "id") Integer id){
+        Optional<Utenti> userDB = utentiService.getUserById(id);
+        ErrorOutput out = new ErrorOutput();
+        if(!userDB.isPresent()){
+            out.setCode("403");
+            out.setMessage("Utente non presente sul DB !!!");
+            return new ResponseEntity<>(out,HttpStatus.FORBIDDEN);
+        }
+        utentiService.aggiornaUtente(id,user);
+        out.setCode("200");
+        out.setMessage("Utente inserito nel DB !!!");
+        return new ResponseEntity<>(out,HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(value = "utente/elimina")
+    public ResponseEntity<?> cancellaUtente(@RequestBody Utenti user,@RequestParam(value = "id") Integer id){
+        Optional<Utenti> userDB = utentiService.getUserById(id);
+        ErrorOutput out = new ErrorOutput();
+        if(!userDB.isPresent()){
+            out.setCode("403");
+            out.setMessage("Utente non presente sul DB !!!");
+            return new ResponseEntity<>(out,HttpStatus.FORBIDDEN);
+        }
+        utentiService.eliminaUtente(id);
+        out.setCode("200");
+        out.setMessage("Utente inserito nel DB !!!");
+        return new ResponseEntity<>(out,HttpStatus.CREATED);
+    }
+
+
 
 }

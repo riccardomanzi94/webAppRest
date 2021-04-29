@@ -1,20 +1,34 @@
 server:
   port: 8081
 
+#mysql
+#spring:
+#  datasource:
+#    driver-class-name : com.mysql.jdbc.Driver
+#    url: jdbc:mysql://localhost:3308/testapp?allowPublicKeyRetrieval=true&useSSL=false
+#    username : root
+#    password : helloworld
+#    platform : org.hibernate.dialect.MySQL5InnoDBDialect
+
+#h2 database
 spring:
   datasource:
-    driver-class-name : com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/testDB?allowPublicKeyRetrieval=true&useSSL=false
-    username : root
-    password : Tognazzi1!
-    platform : org.hibernate.dialect.MySQL5InnoDBDialect
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:players
+    username: sa
+    password:
+    platform: org.hibernate.dialect.H2Dialect
   jpa:
     show_sql : true
     generate-ddl : true
     hibernate:
-      ddl-auto : none
+      ddl-auto : create
 
 security:
   secret: chiavesupersegretissima
   prefix: 'Bearer '
   param: Authorization
+
+logging:
+  level:
+    org.springframework.cache: TRACE

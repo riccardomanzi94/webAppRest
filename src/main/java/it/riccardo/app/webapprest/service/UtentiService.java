@@ -7,9 +7,15 @@ import java.util.Optional;
 
 public interface UtentiService {
 
-    public List<Utenti> getAllUsers();
+    List<Utenti> getAllUsers();
 
-    public Optional<Utenti> getUserById(Integer id);
+    Optional<Utenti> getUserById(Integer id);
 
-    public Optional<Utenti> getUserByUsername(String username);
+    Optional<Utenti> getUserByUsername(String username);
+
+    void salvaUtente(Utenti utente);
+
+    void aggiornaUtente(Integer id,Utenti utente);
+
+    void eliminaUtente(Integer id);
 }
