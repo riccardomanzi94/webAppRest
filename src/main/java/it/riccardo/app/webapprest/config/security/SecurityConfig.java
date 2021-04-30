@@ -28,6 +28,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .cors().and().csrf().disable();
         http
+                .headers().frameOptions().disable();
+        http
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -35,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         new AuthorizationFilter(authenticationManager(), jwtProvider, prefix, param)
                 )
                 .authorizeRequests()
-                .antMatchers("/api/login/**","/api/status/**").permitAll()
+                .antMatchers("/api/login/**","/api/status/**","/console/**").permitAll()
                 .anyRequest().authenticated();
     }
 }
