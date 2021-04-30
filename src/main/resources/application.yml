@@ -1,16 +1,6 @@
 server:
-  port: 8081
+  port: 8082
 
-#mysql
-#spring:
-#  datasource:
-#    driver-class-name : com.mysql.jdbc.Driver
-#    url: jdbc:mysql://localhost:3308/testapp?allowPublicKeyRetrieval=true&useSSL=false
-#    username : root
-#    password : helloworld
-#    platform : org.hibernate.dialect.MySQL5InnoDBDialect
-
-#h2 database
 spring:
   datasource:
     driver-class-name: org.h2.Driver

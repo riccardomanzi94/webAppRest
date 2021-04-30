@@ -2,6 +2,7 @@ package it.riccardo.app.webapprest.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.swagger.annotations.*;
 import it.riccardo.app.webapprest.config.security.JwtProvider;
 import it.riccardo.app.webapprest.model.dto.ErrorOutput;
 import it.riccardo.app.webapprest.model.dto.LoginInputDto;
@@ -25,6 +26,7 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
+@Api(authorizations = {@Authorization(value = "basicAuth")})
 @RequestMapping("/api")
 public class WebAppRestController {
 
@@ -49,6 +51,14 @@ public class WebAppRestController {
 
 
     @PostMapping(value = "/login")
+    @ApiOperation(
+            value = "Authenticate a user to access web services, creating a session and tracking it via an " +
+                    "identifier, i.e. token.",
+            authorizations = @Authorization(value = "basicAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Operation successful"),
+            @ApiResponse(code = 401, message = "Authentication information is missing or invalid")
+    })
     public ResponseEntity<?> authenticate(@RequestBody LoginInputDto body){
 
         final Optional<Utenti> user = utentiService.getUserByUsername(body.getUsername());
@@ -70,12 +80,26 @@ public class WebAppRestController {
 
     @SneakyThrows
     @GetMapping(value = "/users",produces = "application/json")
+    @ApiOperation(
+            value = "Ritorna la lista di tutti gli Utenti presenti",
+            authorizations = @Authorization(value = "basicAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Operation successful"),
+            @ApiResponse(code = 401, message = "Authentication information is missing or invalid")
+    })
     public List<Utenti> getAllUsers(){
         return utentiService.getAllUsers();
     }
 
     @SneakyThrows
     @GetMapping(value = "/user/{id}",produces = "application/json")
+    @ApiOperation(
+            value = "Ritorna l'utente desiderato",
+            authorizations = @Authorization(value = "basicAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Operation successful"),
+            @ApiResponse(code = 401, message = "Authentication information is missing or invalid")
+    })
     public ResponseEntity<?> getUserById(@PathVariable Integer id){
 
         final Optional<Utenti> u =  utentiService.getUserById(id);
@@ -89,7 +113,14 @@ public class WebAppRestController {
     }
 
     @PostMapping(value = "/articolo/aggiungi")
-    public ResponseEntity<?> insArticolo(@RequestBody Articoli articolo){
+    @ApiOperation(
+            value = "Inserisce l'articolo nel Database",
+            authorizations = @Authorization(value = "basicAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Operation successful"),
+            @ApiResponse(code = 401, message = "Authentication information is missing or invalid")
+    })
+    public ResponseEntity<?> addArticolo(@RequestBody Articoli articolo){
 
         articoliService.InsArticolo(articolo);
 
@@ -103,8 +134,15 @@ public class WebAppRestController {
         return new ResponseEntity<>(responseNode,headers,HttpStatus.CREATED);
     }
 
-    @PostMapping(value = "utente/aggiungi")
-    public ResponseEntity<?> aggiungiUser(@RequestBody Utenti user){
+    @PostMapping(value = "/utente/aggiungi")
+    @ApiOperation(
+            value = "Inserisce un nuovo utente",
+            authorizations = @Authorization(value = "basicAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Operation successful"),
+            @ApiResponse(code = 401, message = "Authentication information is missing or invalid")
+    })
+    public ResponseEntity<?> addUser(@RequestBody Utenti user){
         Optional<Utenti> userDB = utentiService.getUserByUsername(user.getUsername());
         ErrorOutput out = new ErrorOutput();
         if(userDB.isPresent()){
@@ -118,8 +156,15 @@ public class WebAppRestController {
         return new ResponseEntity<>(out,HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "utente/aggiorna")
-    public ResponseEntity<?> aggiornaUtente(@RequestBody Utenti user,@RequestParam(value = "id") Integer id){
+    @PutMapping(value = "/utente/aggiorna")
+    @ApiOperation(
+            value = "Aggiorna un utente presente nel sistema",
+            authorizations = @Authorization(value = "basicAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Operation successful"),
+            @ApiResponse(code = 401, message = "Authentication information is missing or invalid")
+    })
+    public ResponseEntity<?> updateUser(@RequestBody Utenti user,@RequestParam(value = "id") Integer id){
         Optional<Utenti> userDB = utentiService.getUserById(id);
         ErrorOutput out = new ErrorOutput();
         if(!userDB.isPresent()){
@@ -133,8 +178,15 @@ public class WebAppRestController {
         return new ResponseEntity<>(out,HttpStatus.CREATED);
     }
 
-    @DeleteMapping(value = "utente/elimina")
-    public ResponseEntity<?> cancellaUtente(@RequestBody Utenti user,@RequestParam(value = "id") Integer id){
+    @DeleteMapping(value = "/utente/elimina")
+    @ApiOperation(
+            value = "Rimuove l'utente desiderato dal sistema.",
+            authorizations = @Authorization(value = "basicAuth"))
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Operation successful"),
+            @ApiResponse(code = 401, message = "Authentication information is missing or invalid")
+    })
+    public ResponseEntity<?> deleteUser(@RequestBody Utenti user,@RequestParam(value = "id") Integer id){
         Optional<Utenti> userDB = utentiService.getUserById(id);
         ErrorOutput out = new ErrorOutput();
         if(!userDB.isPresent()){
@@ -147,7 +199,5 @@ public class WebAppRestController {
         out.setMessage("Utente inserito nel DB !!!");
         return new ResponseEntity<>(out,HttpStatus.CREATED);
     }
-
-
 
 }

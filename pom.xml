@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.3</version>
+		<version>2.4.5</version>
 	</parent>
 
 	<groupId>it.riccardo.app</groupId>
@@ -22,11 +22,22 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<spring.boot.version>2.4.5</spring.boot.version>
 		<lombok.version>1.18.20</lombok.version>
-		<ojdbc8.version>12.2.0.1</ojdbc8.version>
 		<common.codec.version>1.15</common.codec.version>
+		<swagger.version>3.0.0</swagger.version>
+		<jwt.version>3.15.0</jwt.version>
+		<jodatime.version>2.10.10</jodatime.version>
+		<jackson.version>2.12.3</jackson.version>
+		<h2.version>1.4.200</h2.version>
+		<com.github.kongchen.version>3.1.8</com.github.kongchen.version>
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jpa</artifactId>
+			<version>${spring.boot.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -54,27 +65,11 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>${lombok.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.23</version>
-		</dependency>
-
-		<!-- security -->
-
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 			<version>${spring.boot.version}</version>
 		</dependency>
 
-		<!-- cache  -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
@@ -82,33 +77,58 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>com.auth0</groupId>
 			<artifactId>java-jwt</artifactId>
-			<version>3.13.0</version>
+			<version>${jwt.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
-			<version>2.10.10</version>
+			<version>${jodatime.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.11.3</version>
+			<version>${jackson.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
-			<version>2.11.3</version>
+			<version>${jackson.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
+			<version>${h2.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${swagger.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>${swagger.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -122,6 +142,43 @@
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.22.2</version>
+			</plugin>
+			<plugin>
+				<groupId>com.github.kongchen</groupId>
+				<artifactId>swagger-maven-plugin</artifactId>
+				<version>${com.github.kongchen.version}</version>
+				<configuration>
+					<apiSources>
+						<apiSource>
+							<springmvc>true</springmvc>
+							<locations>it.riccardo.app.webapprest.web.controller.WebAppRestController</locations>
+							<host>localhost:8082</host>
+							<basePath>/api</basePath>
+							<info>
+								<title>WebAppRest</title>
+								<version>${project.version}</version>
+								<description>Web app rest for example</description>
+								<contact>
+									<email>riccardomanzi1994@gmail.com</email>
+									<name>Riccardo Manzi</name>
+								</contact>
+							</info>
+							<templatePath>${project.basedir}/templates/strapdown.html.hbs</templatePath>
+							<outputPath>${project.basedir}/swagger/document.html</outputPath>
+							<outputFormats>yaml</outputFormats>
+							<swaggerFileName>api</swaggerFileName>
+							<swaggerDirectory>${project.basedir}/swagger</swaggerDirectory>
+						</apiSource>
+					</apiSources>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 		<resources>

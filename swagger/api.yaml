@@ -1,0 +1,251 @@
+---
+swagger: "2.0"
+info:
+  description: "Web app rest for example"
+  version: "0.0.1-SNAPSHOT"
+  title: "WebAppRest"
+  contact:
+    name: "Riccardo Manzi"
+    email: "riccardomanzi1994@gmail.com"
+host: "localhost:8082"
+basePath: "/api"
+paths:
+  /api/articolo/aggiungi:
+    post:
+      summary: "Inserisce l'articolo nel Database"
+      description: ""
+      operationId: "addArticolo"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/Articoli"
+      responses:
+        200:
+          description: "Operation successful"
+          schema:
+            type: "object"
+        401:
+          description: "Authentication information is missing or invalid"
+      security:
+      - basicAuth: []
+      - basicAuth: []
+  /api/login:
+    post:
+      summary: "Authenticate a user to access web services, creating a session and\
+        \ tracking it via an identifier, i.e. token."
+      description: ""
+      operationId: "authenticate"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/LoginInputDto"
+      responses:
+        200:
+          description: "Operation successful"
+          schema:
+            type: "object"
+        401:
+          description: "Authentication information is missing or invalid"
+      security:
+      - basicAuth: []
+      - basicAuth: []
+  /api/status:
+    get:
+      operationId: "getStatus"
+      parameters: []
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "string"
+      security:
+      - basicAuth: []
+  /api/user/{id}:
+    get:
+      summary: "Ritorna l'utente desiderato"
+      description: ""
+      operationId: "getUserById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "Operation successful"
+          schema:
+            type: "object"
+        401:
+          description: "Authentication information is missing or invalid"
+      security:
+      - basicAuth: []
+      - basicAuth: []
+  /api/users:
+    get:
+      summary: "Ritorna la lista di tutti gli Utenti presenti"
+      description: ""
+      operationId: "getAllUsers"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Operation successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Utenti"
+        401:
+          description: "Authentication information is missing or invalid"
+      security:
+      - basicAuth: []
+      - basicAuth: []
+  /api/utente/aggiorna:
+    put:
+      summary: "Aggiorna un utente presente nel sistema"
+      description: ""
+      operationId: "updateUser"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/Utenti"
+      - name: "id"
+        in: "query"
+        required: true
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "Operation successful"
+          schema:
+            type: "object"
+        401:
+          description: "Authentication information is missing or invalid"
+      security:
+      - basicAuth: []
+      - basicAuth: []
+  /api/utente/aggiungi:
+    post:
+      summary: "Inserisce un nuovo utente"
+      description: ""
+      operationId: "addUser"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/Utenti"
+      responses:
+        200:
+          description: "Operation successful"
+          schema:
+            type: "object"
+        401:
+          description: "Authentication information is missing or invalid"
+      security:
+      - basicAuth: []
+      - basicAuth: []
+  /api/utente/elimina:
+    delete:
+      summary: "Rimuove l'utente desiderato dal sistema."
+      description: ""
+      operationId: "deleteUser"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/Utenti"
+      - name: "id"
+        in: "query"
+        required: true
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "Operation successful"
+          schema:
+            type: "object"
+        401:
+          description: "Authentication information is missing or invalid"
+      security:
+      - basicAuth: []
+      - basicAuth: []
+definitions:
+  Articoli:
+    type: "object"
+    properties:
+      codArt:
+        type: "string"
+        description: "codice articolo"
+      descrizione:
+        type: "string"
+        description: "descrizione"
+      um:
+        type: "string"
+        description: "unità di misura"
+      codStat:
+        type: "string"
+        description: "codice statistico"
+      pzCart:
+        type: "integer"
+        format: "int32"
+        description: "pezzi per articolo"
+      pesoNetto:
+        type: "number"
+        format: "double"
+        description: "pesonetto"
+      idStatoArt:
+        type: "string"
+        description: "stato articolo"
+      dataCreaz:
+        type: "string"
+        format: "date-time"
+        description: "data creazione"
+      user:
+        $ref: "#/definitions/Utenti"
+    description: "Articoli"
+  LoginInputDto:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      password:
+        type: "string"
+  Utenti:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+        description: "Id"
+      nome:
+        type: "string"
+        description: "nome dell'utente"
+      cognome:
+        type: "string"
+        description: "cognome dell'utente"
+      email:
+        type: "string"
+        description: "email"
+      username:
+        type: "string"
+        description: "username"
+      password:
+        type: "string"
+        description: "password"
+      articoli:
+        type: "array"
+        uniqueItems: true
+        items:
+          $ref: "#/definitions/Articoli"
+    description: "Utenti"
