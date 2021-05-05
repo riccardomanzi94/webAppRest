@@ -10,6 +10,7 @@ import it.riccardo.app.webapprest.model.dto.LoginOutputDto;
 import it.riccardo.app.webapprest.model.entities.Articoli;
 import it.riccardo.app.webapprest.model.entities.Utenti;
 import it.riccardo.app.webapprest.service.ArticoliService;
+import it.riccardo.app.webapprest.service.EmailService;
 import it.riccardo.app.webapprest.service.UtentiService;
 import it.riccardo.app.webapprest.web.exception.NotFoundException;
 import lombok.SneakyThrows;
@@ -35,6 +36,9 @@ public class WebAppRestController {
 
     @Autowired
     private ArticoliService articoliService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -198,6 +202,13 @@ public class WebAppRestController {
         out.setCode("200");
         out.setMessage("Utente inserito nel DB !!!");
         return new ResponseEntity<>(out,HttpStatus.CREATED);
+    }
+
+    @SneakyThrows
+    @PostMapping(value = "/email")
+    public ResponseEntity<?> sendEmail(@RequestParam(value = "email") String email){
+        emailService.sendEmail(email);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }

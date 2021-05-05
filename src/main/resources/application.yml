@@ -16,6 +16,18 @@ spring:
     generate-ddl : true
     hibernate:
       ddl-auto : create
+  mail:
+    username: fiorellarossi666@gmail.com
+    password: Fiorellarossi1
+    host: smtp.gmail.com
+    port: 587
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 security:
   secret: chiavesupersegretissima
