@@ -31,6 +31,21 @@ paths:
       security:
       - basicAuth: []
       - basicAuth: []
+  /api/email:
+    post:
+      operationId: "sendEmail"
+      parameters:
+      - name: "email"
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "object"
+      security:
+      - basicAuth: []
   /api/login:
     post:
       summary: "Authenticate a user to access web services, creating a session and\
