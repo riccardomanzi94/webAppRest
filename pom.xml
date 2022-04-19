@@ -20,14 +20,16 @@
 		<java.version>11</java.version>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
-		<spring.boot.version>2.4.5</spring.boot.version>
-		<lombok.version>1.18.20</lombok.version>
+		<spring.boot.version>2.6.6</spring.boot.version>
+		<lombok.version>1.18.24</lombok.version>
 		<common.codec.version>1.15</common.codec.version>
 		<swagger.version>3.0.0</swagger.version>
-		<jwt.version>3.15.0</jwt.version>
-		<jodatime.version>2.10.10</jodatime.version>
-		<jackson.version>2.12.3</jackson.version>
-		<h2.version>1.4.200</h2.version>
+		<jwt.version>3.19.1</jwt.version>
+		<jodatime.version>2.10.14</jodatime.version>
+		<jackson.version>2.13.2.2</jackson.version>
+		<jackson.core.version>2.13.2</jackson.core.version>
+		<h2.version>2.1.210</h2.version>
+		<spring.data.jpa.version>2.6.3</spring.data.jpa.version>
 		<com.github.kongchen.version>3.1.8</com.github.kongchen.version>
 	</properties>
 
@@ -35,7 +37,7 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
-			<version>${spring.boot.version}</version>
+			<version>${spring.data.jpa.version}</version>
 		</dependency>
 
 		<dependency>
@@ -103,13 +105,13 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>${jackson.version}</version>
+			<version>${jackson.core.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
-			<version>${jackson.version}</version>
+			<version>${jackson.core.version}</version>
 		</dependency>
 
 		<dependency>
