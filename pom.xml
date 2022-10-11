@@ -20,16 +20,16 @@
 		<java.version>11</java.version>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
-		<spring.boot.version>2.6.6</spring.boot.version>
+		<spring.boot.version>2.7.4</spring.boot.version>
 		<lombok.version>1.18.24</lombok.version>
 		<common.codec.version>1.15</common.codec.version>
 		<swagger.version>3.0.0</swagger.version>
 		<jwt.version>3.19.1</jwt.version>
 		<jodatime.version>2.10.14</jodatime.version>
-		<jackson.version>2.13.2.2</jackson.version>
-		<jackson.core.version>2.13.2</jackson.core.version>
-		<h2.version>2.1.210</h2.version>
-		<spring.data.jpa.version>2.6.3</spring.data.jpa.version>
+		<jackson.version>2.14.0-rc1</jackson.version>
+		<jackson.core.version>2.14.0-rc1</jackson.core.version>
+		<h2.version>2.1.214</h2.version>
+		<spring.data.jpa.version>2.7.3</spring.data.jpa.version>
 		<com.github.kongchen.version>3.1.8</com.github.kongchen.version>
 	</properties>
 
